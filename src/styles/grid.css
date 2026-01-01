@@ -1,0 +1,72 @@
+input:focus{
+  outline: none;
+}
+
+.rg-grid {
+  border: 1px solid #ddd;
+  display: inline-block;
+  user-select: none;
+}
+
+.rg-row {
+  display: flex;
+}
+
+.rg-cell {
+  min-width: 120px;
+  padding: 6px;
+  border: 1px solid #eee;
+}
+
+.rg-cell.active {
+  outline: 2px solid #2563eb;
+  z-index: 999;
+}
+
+.rg-cell.range {
+  background: rgba(37, 99, 235, 0.15);
+}
+
+.rg-row {
+  display: flex;
+}
+
+.rg-header {
+  background: #f3f4f6;
+  font-weight: 600;
+}
+
+.rg-row-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #575e696e;
+}
+
+.rg-corner,
+.rg-row-header,
+.rg-col-header {
+  width: 20px;
+  text-align: center;
+  border: 1px solid #ddd;
+  user-select: none;
+  cursor: pointer;
+}
+
+.rg-col-header {
+  flex: 1;
+}
+
+
+.cell.preview {
+  background: rgba(59, 130, 246, 0.2); /* biru transparan */
+}
+
+.rg-selection-overlay {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(59, 130, 246, 0.18);
+  border: 1px solid #2563eb;
+  box-sizing: border-box;
+  z-index: 10;
+}
