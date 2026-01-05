@@ -1,72 +1,119 @@
-import { createContext, useContext, useState } from "react"
-import { CellPosition, CellRange } from "./types"
+import { createContext, useContext, useEffect, useRef, useState } from "react"
+import { GridState, CellPos, Range, GridContextInfo } from "./types"
 
-type GridState = {
-  activeCell: CellPosition | null
-  setActiveCell: (pos: CellPosition | null) => void
-
-  range: CellRange | null
-  setRange: (r: CellRange | null) => void
-
-  anchor: CellPosition | null
-  setAnchor: (p: CellPosition | null) => void
-  
-  previewRange: CellRange | null
-  setPreviewRange: (p: CellRange | null) => void
-
-  dragRect : DragRect | null
-  setDragRect : (p: DragRect | null) => void
-
-  isDragging : boolean
-  setIsDragging : (p : boolean) => void
-}
-
-type PositionPoint = { x : number, y : number } 
-
-export type DragRect = {
+type ContextMenuState = {
   x: number
   y: number
-  width: number
-  height: number
-  start : { x : number, y : number }  | null,
-  end : { x : number, y : number }  | null
+  ctx: any
 } | null
+const GridContext = createContext<any>(null)
 
+export const GridProvider = ({ children }: any) => {
+  const [contextMenu, setContextMenu] = useState<ContextMenuState>(null)
+  const [state, setState] = useState<GridState>({
+    activeCell: null,
+    anchor: null,
+    range: null,
+    previewRange: null,
+  })
 
-const GridContext = createContext<GridState | null>(null)
+  function openContextMenu(
+    x: number,
+    y: number,
+    ctx: any
+  ) {
+    setContextMenu({ x, y, ctx })
+  }
 
-export const useGrid = () => {
-  const ctx = useContext(GridContext)
-  if (!ctx) throw new Error("useGrid must be used inside GridProvider")
-  return ctx
-}
+  function closeContextMenu() {
+    setContextMenu(null)
+  }
 
-export function GridProvider({ children } : any) {
-  const [activeCell, setActiveCell] = useState<CellPosition | null>(null)
-  const [range, setRange] = useState<CellRange | null>(null)
-  const [anchor, setAnchor] = useState<CellPosition | null>(null)
-  const [previewRange, setPreviewRange] = useState<CellRange | null>(null)
-  const [dragRect, setDragRect] = useState<DragRect | null>(null)
-  const [isDragging, setIsDragging] = useState(false)
-  
   return (
-    <GridContext.Provider
-      value={{
-        activeCell,
-        setActiveCell,
-        range,
-        setRange,
-        anchor,
-        setAnchor,
-        previewRange,
-        setPreviewRange,
-        dragRect,
-        setDragRect,
-        isDragging,
-        setIsDragging
-      }}
-    >
+    <GridContext.Provider value={{ 
+        contextMenu,
+        openContextMenu,
+        closeContextMenu,
+        state, 
+        setState 
+      }}>
       {children}
     </GridContext.Provider>
   )
 }
+
+type ContextMenuProps = {
+  x: number
+  y: number
+  items: {
+    label: string
+    shortcut?: string
+    disabled?: boolean
+    onClick: (ctx: any) => void
+  }[]
+  ctx: any
+  onClose: () => void
+}
+
+export function ContextMenu({
+  x,
+  y,
+  items,
+  ctx,
+  onClose,
+}: ContextMenuProps) {
+  const contextRef = useRef<any>(null)
+  useEffect(() => {
+    if (!ctx) return
+
+    function handleClick(e: MouseEvent) {
+      if (!contextRef.current) return
+
+      // klik DI LUAR grid → tutup context menu
+      if (!contextRef.current.contains(e.target as Node)) {
+        onClose()
+      }
+    }
+
+    window.addEventListener("mousedown", handleClick)
+    return () =>
+      window.removeEventListener("mousedown", handleClick)
+  }, [ctx])
+  return (
+    <div
+      ref={contextRef}
+      className="grid-context-menu"
+      style={{
+        position: "fixed",
+        top: y,
+        left: x,
+        zIndex: 9999,
+      }}
+      // onMouseLeave={onClose}
+    >
+      {items.map((item, i) => (
+        <div
+          key={i}
+          className={`menu-item ${
+            item.disabled ? "disabled" : ""
+          }`}
+          onClick={() => {
+            if (item.disabled) return
+            item.onClick(ctx)
+            onClose()
+          }}
+        >
+          <span>{item.label}</span>
+          {item.shortcut && (
+            <span className="shortcut">
+              {item.shortcut}
+            </span>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+
+export const useGrid = () => useContext(GridContext)

@@ -1,0 +1,98 @@
+.grid-root {
+  border: 1px solid #ddd;
+  height: 500px;
+  width: 100%;
+  overflow: auto;
+}
+
+.grid {
+  display: grid;
+  user-select: none;
+}
+
+.row-header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cell,
+.column-header,
+.row-header,
+.corner-header {
+  padding: 3px 8px;
+  border-right: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  background: white;
+}
+
+.column-header,
+.row-header,
+.corner-header {
+  background: #f3f4f6;
+  font-weight: 600;
+}
+
+.cell.active {
+  outline: 2px solid #2563eb;
+  z-index: 2;
+}
+
+.selection-overlay {
+  position: absolute;
+  border: 2px solid #2563eb;
+  background: rgba(37, 99, 235, 0.12);
+  pointer-events: none;
+}
+
+.cell.selected {
+  background-color: rgba(37, 99, 235, 0.18);
+}
+
+.cell.preview {
+  background: rgba(34, 94, 220, 0.1);
+}
+
+/* default */
+.grid-align-left {
+  text-align: left;
+}
+
+/* center */
+.grid-align-center {
+  text-align: center;
+}
+
+/* right */
+.grid-align-right {
+  text-align: right;
+}
+
+
+.grid-context-menu {
+  background: #fff;
+  border: 1px solid #ddd;
+  min-width: 180px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+  font-size: 13px;
+}
+
+.menu-item {
+  padding: 6px 10px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background: #f0f6ff;
+}
+
+.menu-item.disabled {
+  opacity: .5;
+  pointer-events: none;
+}
+
+.shortcut {
+  color: #888;
+}
