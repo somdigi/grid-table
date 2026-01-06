@@ -1,6 +1,6 @@
 // components/GridInner.tsx
 import { useEffect, useMemo, useRef } from "react"
-import { ContextMenu, useGrid } from "../core/GridContext"
+import { useGrid } from "../core/GridContext"
 import { move } from "../utils/move"
 import { rangeToTSV } from "../utils/clipboard"
 import { SelectionOverlay } from "./SectionOverlay"
@@ -10,6 +10,7 @@ import { buildGridTemplate } from "../core/gridTemplate"
 import ColumnHeader from "./ColumnHeader"
 import Row from "./Row"
 import { getSelectedRows } from "../core/selection"
+import { ContextMenu } from "../core/ContextMenu"
 
 
 export default function GridInner({
@@ -23,7 +24,7 @@ export default function GridInner({
 }: any) {
 
   
-  const { state, setState, contextMenu, closeContextMenu } = useGrid()
+  const { state, setState, contextMenu, closeContextMenu, startEdit, updateDraft, cancelEdit } = useGrid()
   const gridRef = useRef<HTMLDivElement>(null)
 
   const maxRow = rows.length - 1
@@ -42,12 +43,19 @@ export default function GridInner({
       range: null,
       previewRange: null,
     }))
+    cancelEdit()
   })
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (!state.activeCell) return
 
+      if (e.key.length <= 1) {
+        e.preventDefault()
+        
+        startEdit(state.activeCell.row, state.activeCell.col)
+        updateDraft(e.key)
+      }
       if (e.key.startsWith("Arrow")) {
         e.preventDefault()
 
@@ -92,13 +100,33 @@ export default function GridInner({
         setState((s: any) => {
           return {
             ...s,
-            editActive : false,
+            editActive : true,
             activeCell: next,
             anchor: next,
             range: null,
             previewRange: null,
           }
         })
+      }
+      if (e.key.startsWith("Tab")) {
+        e.preventDefault()
+        const next = move(
+          state.activeCell,
+          "ArrowRight",
+          maxRow,
+          maxCol
+        )
+        setState((s: any) => {
+          return {
+            ...s,
+            editActive : true,
+            activeCell: next,
+            anchor: next,
+            range: null,
+            previewRange: null,
+          }
+        })
+        cancelEdit()
       }
       if (e.key.startsWith("Esc")) {
         const next = move(
@@ -110,7 +138,7 @@ export default function GridInner({
         setState((s: any) => {
           return {
             ...s,
-            editActive : false,
+            editActive : true,
             activeCell: next,
             anchor: next,
             range: null,
