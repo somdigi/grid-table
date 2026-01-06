@@ -3,7 +3,7 @@ import { Grid } from "../../dist"
 import "../../dist/index.css"
 
 const columns = [
-  { key: "name", headerName: "Name", editable: true},
+  { key: "name", headerName: "Name", editable: false},
   { key: "qty", headerName: "Qty", editable: true, align: "center", width: 100 },
   { key: "price", headerName: "Price", editable: true, align: "right", width: 200 },
 ]
@@ -31,23 +31,20 @@ export default function App() {
           label: "Delete Row",
           shortcut: "Del",
           onClick: (ctx : any) => {
-            console.log(ctx);
-            
             // if (!range) return
             // onDeleteRows(getSelectedRows(range))
           },
         },
         {
           label: "Insert Row Below",
-          onClick: (rowIndex : any) => {
-            console.log(rowIndex);
+          onClick: (ctx : any) => {
             
             // insertRow(rowIndex! + 1)
           },
         },
         {
           label: "Duplicate Row",
-          onClick: ({ rowIndex } : any) => {
+          onClick: (ctx : any) => {
             // duplicateRow(rowIndex!)
           },
         },
