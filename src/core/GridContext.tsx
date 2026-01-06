@@ -1,32 +1,54 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react"
-import { GridState, CellPos, Range, GridContextInfo } from "./types"
+import { GridState, CellPos, Range, GridContextInfo, ContextMenuProps, ContextMenuState } from "./types"
 
-type ContextMenuState = {
-  x: number
-  y: number
-  ctx: any
-} | null
+const initialState = {
+  activeCell: null,
+  anchor: null,
+  range: null,
+  previewRange: null,
+}
+
 const GridContext = createContext<any>(null)
-
 export const GridProvider = ({ children }: any) => {
-  const [contextMenu, setContextMenu] = useState<ContextMenuState>(null)
-  const [state, setState] = useState<GridState>({
-    activeCell: null,
-    anchor: null,
-    range: null,
-    previewRange: null,
-  })
+  const [data, setData] = useState<string[][]>([])
+  const [editingCell, setEditingCell] = useState<CellPos>(null)
 
-  function openContextMenu(
-    x: number,
-    y: number,
-    ctx: any
-  ) {
+  const [draftValue, setDraftValue] = useState("")
+  const [oldValue, setOldValue] = useState("")
+  const [contextMenu, setContextMenu] = useState<ContextMenuState>(null)
+  const [state, setState] = useState<GridState>(initialState)
+
+  function openContextMenu( x: number, y: number, ctx: any ) {
     setContextMenu({ x, y, ctx })
   }
 
   function closeContextMenu() {
     setContextMenu(null)
+  }
+
+
+  const startEdit = (row: number, col: number) => {
+    const value = data[row]?.[col] ?? ""
+    setEditingCell({ row, col })
+    setOldValue(value)
+    setDraftValue(value)
+  }
+
+  const updateDraft = (value: string) => {
+    setDraftValue(value)
+  }
+
+  const commitEdit = (onChange : (v : any) => void | null) => {
+    if (!editingCell) return
+
+    const { row, col } = editingCell
+    onChange?.(draftValue)
+    setEditingCell(null)
+  }
+
+  const cancelEdit = () => {
+    setDraftValue(oldValue)
+    setEditingCell(null)
   }
 
   return (
@@ -35,83 +57,18 @@ export const GridProvider = ({ children }: any) => {
         openContextMenu,
         closeContextMenu,
         state, 
-        setState 
+        setState,
+        data,
+        setData,
+        editingCell,
+        startEdit,
+        updateDraft,
+        commitEdit,
+        cancelEdit,
+        draftValue,
       }}>
       {children}
     </GridContext.Provider>
-  )
-}
-
-type ContextMenuProps = {
-  x: number
-  y: number
-  items: {
-    label: string
-    shortcut?: string
-    disabled?: boolean
-    onClick: (ctx: any) => void
-  }[]
-  ctx: any
-  onClose: () => void
-}
-
-export function ContextMenu({
-  x,
-  y,
-  items,
-  ctx,
-  onClose,
-}: ContextMenuProps) {
-  const contextRef = useRef<any>(null)
-  useEffect(() => {
-    if (!ctx) return
-
-    function handleClick(e: MouseEvent) {
-      if (!contextRef.current) return
-
-      // klik DI LUAR grid → tutup context menu
-      if (!contextRef.current.contains(e.target as Node)) {
-        onClose()
-      }
-    }
-
-    window.addEventListener("mousedown", handleClick)
-    return () =>
-      window.removeEventListener("mousedown", handleClick)
-  }, [ctx])
-  return (
-    <div
-      ref={contextRef}
-      className="grid-context-menu"
-      style={{
-        position: "fixed",
-        top: y,
-        left: x,
-        zIndex: 9999,
-      }}
-      // onMouseLeave={onClose}
-    >
-      {items.map((item, i) => (
-        <div
-          key={i}
-          className={`menu-item ${
-            item.disabled ? "disabled" : ""
-          }`}
-          onClick={() => {
-            if (item.disabled) return
-            item.onClick(ctx)
-            onClose()
-          }}
-        >
-          <span>{item.label}</span>
-          {item.shortcut && (
-            <span className="shortcut">
-              {item.shortcut}
-            </span>
-          )}
-        </div>
-      ))}
-    </div>
   )
 }
 

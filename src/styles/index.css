@@ -96,3 +96,13 @@
 .shortcut {
   color: #888;
 }
+
+
+.input-cell{
+  background-color: transparent;
+  color: black;
+}
+.input-cell:focus{
+  border: 2px solid #2563eb;
+  outline: none;
+}

@@ -1,5 +1,5 @@
 // core/types.ts
-export type CellPos = { row: number; col: number }
+export type CellPos = { row: number; col: number } | null
 
 export type Range = {
   start: CellPos
@@ -53,3 +53,23 @@ export interface GridContextMenuItem {
   disabled?: boolean
   onClick: (ctx: GridContextInfo) => void
 }
+
+
+export type ContextMenuProps = {
+  x: number
+  y: number
+  items: {
+    label: string
+    shortcut?: string
+    disabled?: boolean
+    onClick: (ctx: any) => void
+  }[]
+  ctx: any
+  onClose: () => void
+}
+
+export type ContextMenuState = {
+  x: number
+  y: number
+  ctx: any
+} | null
