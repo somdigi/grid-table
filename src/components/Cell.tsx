@@ -57,7 +57,8 @@ export function Cell({ row, col, value, editable, onChange, align = "left", clas
     if (!cell) return {}
     
     return {
-      backgroundColor: cell.color || "rgba(255, 62, 62, 0.47)"
+      backgroundColor: cell.color || "rgba(255, 62, 62, 0.47)",
+      color: cell.textColor || "rgba(255, 255, 255, 1)",
     }
   }
 
@@ -114,7 +115,6 @@ export function Cell({ row, col, value, editable, onChange, align = "left", clas
         }))
       }
       }
-      // onBlur={(e) => onChange?.(e.currentTarget.textContent)}
       onFocus={(e) => {
         const rect = e.target as HTMLDivElement
         const dataset = rect.dataset
