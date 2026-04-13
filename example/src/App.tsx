@@ -3,11 +3,7 @@ import { Grid } from "../../dist"
 import "../../dist/index.css"
 
 const columns = [
-<<<<<<< HEAD
   { key: "test", headerName: "Test", editable: false},
-=======
-  { key: "is_reseller", headerName: "Reseller", align: "center", width: 80},
->>>>>>> e7a88bffe79ebcd49a7e85e4a42a53ef308c03ea
   { key: "name", headerName: "Name", editable: false},
   { key: "qty", headerName: "Qty", editable: true, align: "center", width: 100 },
   { key: "price", headerName: "Price", editable: true, align: "right", width: 200 },
@@ -16,11 +12,7 @@ const columns = [
 export default function App() {
   const [rows, setRows] = useState(
     Array.from({ length: 50 }).map((_, i) => ({
-<<<<<<< HEAD
       test: Boolean("false"),
-=======
-      is_reseller: false,
->>>>>>> e7a88bffe79ebcd49a7e85e4a42a53ef308c03ea
       name: `Item ${i + 1}`,
       qty: i + 1,
       price: (i + 1) * 1000,
