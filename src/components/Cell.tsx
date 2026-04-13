@@ -128,7 +128,8 @@ export function Cell({ row, col, value, editable, onChange, align = "left" }: an
         }
       }}
     >
-      {value}
+      {typeof value == "boolean" ? <input type="checkbox" onChange={(e) => onChange?.(e.currentTarget.checked)} /> : value}
+      
     </div>
   )
 }

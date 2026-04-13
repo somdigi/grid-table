@@ -5,7 +5,7 @@ export function isCellInRange(
   col: number,
   range?: Range | null
 ) {
-  if (!range) return false
+  if (!range || !range.start || !range.end) return []
 
   const r1 = Math.min(range.start.row, range.end.row)
   const r2 = Math.max(range.start.row, range.end.row)

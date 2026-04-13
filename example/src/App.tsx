@@ -3,6 +3,7 @@ import { Grid } from "../../dist"
 import "../../dist/index.css"
 
 const columns = [
+  { key: "test", headerName: "Test", editable: false},
   { key: "name", headerName: "Name", editable: false},
   { key: "qty", headerName: "Qty", editable: true, align: "center", width: 100 },
   { key: "price", headerName: "Price", editable: true, align: "right", width: 200 },
@@ -11,6 +12,7 @@ const columns = [
 export default function App() {
   const [rows, setRows] = useState(
     Array.from({ length: 50 }).map((_, i) => ({
+      test: Boolean("false"),
       name: `Item ${i + 1}`,
       qty: i + 1,
       price: (i + 1) * 1000,
@@ -51,6 +53,8 @@ export default function App() {
       ]}
         onDeleteRows={(range : any) => console.log(range)}
         onChange={(row : any, key : any, value : any) => {
+          console.log(value);
+          
           setRows(r => {
             const next = [...r]
             next[row] = { ...next[row], [key]: value }
