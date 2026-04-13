@@ -20,7 +20,9 @@ export default function GridInner({
   copyWithHeader = false,
   onChange,
   onDeleteRows,
-  propsContextMenu
+  propsContextMenu,
+  classNames,
+  coloring 
 }: any) {
 
   
@@ -244,6 +246,7 @@ export default function GridInner({
               col={colIndex}
               align={col.align}
               label={col.headerName}
+              classNames={classNames}
             />
           ))}
 
@@ -255,6 +258,8 @@ export default function GridInner({
               row={row}
               columns={columns}
               onChange={onChange}
+              classNames={classNames}
+              coloring={coloring}
             />
           ))}
         </div>

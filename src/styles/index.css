@@ -16,10 +16,13 @@
     justify-content: center;
 }
 
+
 .cell,
 .column-header,
 .row-header,
 .corner-header {
+  display: flex;
+  align-items: center;
   padding: 3px 8px;
   border-right: 1px solid #eee;
   border-bottom: 1px solid #eee;
@@ -55,17 +58,17 @@
 
 /* default */
 .grid-align-left {
-  text-align: left;
+  justify-content: start;
 }
 
 /* center */
 .grid-align-center {
-  text-align: center;
+  justify-content: center;
 }
 
 /* right */
 .grid-align-right {
-  text-align: right;
+  justify-content: end;
 }
 
 

@@ -7,6 +7,8 @@ export default function Row({
   row,
   columns,
   onChange,
+  classNames,
+  coloring
 }: any) {
   const {state, openContextMenu} = useGrid()
 
@@ -22,6 +24,8 @@ export default function Row({
           col={colIndex}
           value={row[col.key]}
           editable={col.editable}
+          classNames={classNames}
+          coloring={coloring}
           onContextMenu={(e : any) => {
             e.preventDefault()
             openContextMenu(e.clientX, e.clientY, {

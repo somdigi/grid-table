@@ -3,7 +3,11 @@ import { Grid } from "../../dist"
 import "../../dist/index.css"
 
 const columns = [
+<<<<<<< HEAD
   { key: "test", headerName: "Test", editable: false},
+=======
+  { key: "is_reseller", headerName: "Reseller", align: "center", width: 80},
+>>>>>>> e7a88bffe79ebcd49a7e85e4a42a53ef308c03ea
   { key: "name", headerName: "Name", editable: false},
   { key: "qty", headerName: "Qty", editable: true, align: "center", width: 100 },
   { key: "price", headerName: "Price", editable: true, align: "right", width: 200 },
@@ -12,7 +16,11 @@ const columns = [
 export default function App() {
   const [rows, setRows] = useState(
     Array.from({ length: 50 }).map((_, i) => ({
+<<<<<<< HEAD
       test: Boolean("false"),
+=======
+      is_reseller: false,
+>>>>>>> e7a88bffe79ebcd49a7e85e4a42a53ef308c03ea
       name: `Item ${i + 1}`,
       qty: i + 1,
       price: (i + 1) * 1000,
@@ -28,26 +36,25 @@ export default function App() {
         rows={rows}
         copyWithHeader
         scrollableX={false}
+        classNames={{
+          header: "px-2 py-10",
+          data: "px-2 py-10",
+        }}
         propsContextMenu={[
         {
           label: "Delete Row",
           shortcut: "Del",
           onClick: (ctx : any) => {
-            // if (!range) return
-            // onDeleteRows(getSelectedRows(range))
           },
         },
         {
           label: "Insert Row Below",
           onClick: (ctx : any) => {
-            
-            // insertRow(rowIndex! + 1)
           },
         },
         {
           label: "Duplicate Row",
           onClick: (ctx : any) => {
-            // duplicateRow(rowIndex!)
           },
         },
       ]}
@@ -60,6 +67,14 @@ export default function App() {
             next[row] = { ...next[row], [key]: value }
             return next
           })
+        }}
+        coloring={{
+          cells : [
+            {row : 0, col : 0, color : "rgba(255, 62, 62, 0.47)"},
+            {row : 0, col : 1, color : "rgba(255, 62, 62, 0.47)"},
+            {row : 0, col : 2, color : "rgba(255, 62, 62, 0.47)"},
+            {row : 0, col : 3, color : "rgba(255, 62, 62, 0.47)"}
+          ]
         }}
       />
     </div>

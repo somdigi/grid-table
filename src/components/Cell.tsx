@@ -3,7 +3,7 @@ import { useGrid } from "../core/GridContext"
 import { getAlignClass } from "../utils/align"
 import { isCellInRange } from "../utils/range"
 
-export function Cell({ row, col, value, editable, onChange, align = "left" }: any) {
+export function Cell({ row, col, value, editable, onChange, align = "left", classNames, coloring }: any) {
   const { state, setState, openContextMenu, editingCell, startEdit, draftValue, updateDraft, commitEdit, cancelEdit } = useGrid()
   const activeCell = state.activeCell?.row === row && state.activeCell?.col === col
   const selected = isCellInRange(row, col, state.range)
@@ -52,6 +52,15 @@ export function Cell({ row, col, value, editable, onChange, align = "left" }: an
     )
   }
 
+  const checkColoringStyle = (row : number, col : number) => {
+    const cell = coloring?.cells.find((cell : any) => cell.row == row && cell.col == col) 
+    if (!cell) return {}
+    
+    return {
+      backgroundColor: cell.color || "rgba(255, 62, 62, 0.47)",
+      color: cell.textColor || "rgba(255, 255, 255, 1)",
+    }
+  }
 
   
 
@@ -66,9 +75,11 @@ export function Cell({ row, col, value, editable, onChange, align = "left" }: an
         activeCell  ? "active" : "", 
         selected ? "selected" : "",
         preview ? "preview" : "",
-      
+        classNames?.data
 
       ].join(" ")}
+
+      style={{...checkColoringStyle(row, col)}}
       onDoubleClick={() => editable && startEdit(row, col)}
       onContextMenu={(e) => {
         e.preventDefault()
@@ -104,7 +115,6 @@ export function Cell({ row, col, value, editable, onChange, align = "left" }: an
         }))
       }
       }
-      // onBlur={(e) => onChange?.(e.currentTarget.textContent)}
       onFocus={(e) => {
         const rect = e.target as HTMLDivElement
         const dataset = rect.dataset

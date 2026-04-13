@@ -5,11 +5,13 @@ import { getAlignClass } from "../utils/align"
 export default function ColumnHeader({
   col,
   label,
-  align = "left"
+  align = "left",
+  classNames
 }: {
   col: number
   label: string
   align : ColumnAlign
+  classNames? : any
 }) {
   const { state, setState, openContextMenu } = useGrid()
 
@@ -50,7 +52,7 @@ export default function ColumnHeader({
           range: state.range,
         })
       }}
-      className={["column-header", getAlignClass(align)].join(" ")}
+      className={["column-header", getAlignClass(align), classNames?.header].join(" ")}
       onClick={onClick}
     >
       {label}
